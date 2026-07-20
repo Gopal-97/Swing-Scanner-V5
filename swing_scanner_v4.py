@@ -8,7 +8,7 @@ from swing_score_v2 import calculate_score
 from support_resistance_v4 import calculate_support_resistance
 
 
-def scan_coin_v4(symbol, interval="1d", limit=300):
+def scan_coin_v4(symbol, interval="1day", limit=300):
     try:
         df = get_data(symbol, interval=interval, limit=limit)
 
