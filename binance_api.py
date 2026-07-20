@@ -28,7 +28,8 @@ def get_usdt_pairs():
 
 def get_data(symbol, interval="1day", limit=250):
 
-    kc_symbol = symbol[:-4] + "-USDT"
+    # Binance style -> KuCoin style
+    kc_symbol = symbol.replace("USDT", "-USDT")
 
     url = BASE_URL + "/api/v1/market/candles"
 
