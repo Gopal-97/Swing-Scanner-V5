@@ -18,6 +18,21 @@ for coin in coins:
 
 df = pd.DataFrame(results)
 
+print("\n========== DEBUG ==========")
+print("Columns:", list(df.columns))
+print("Total Results:", len(df))
+print(df.head())
+print("===========================\n")
+
+if df.empty or "Signal" not in df.columns:
+    print("❌ No valid scan results found.")
+
+    send_telegram_message(
+        "⚠️ Swing Scanner V5\n\nNo valid scan results generated."
+    )
+
+    exit()
+
 buy_df = df[df["Signal"].isin(["BUY", "STRONG BUY"])]
 
 buy_df = buy_df.sort_values(
@@ -30,9 +45,10 @@ buy_df.to_csv("swing_signals_v5.csv", index=False)
 print("\n========== TOP SWING V5 SIGNALS ==========")
 print(buy_df.head(20).to_string(index=False))
 
-# Telegram Message
 if len(buy_df) == 0:
-    send_telegram_message("📉 Swing Scanner V5\n\nNo BUY signal found today.")
+    send_telegram_message(
+        "📉 Swing Scanner V5\n\nNo BUY signal found today."
+    )
 else:
     msg = "🚀 Swing Scanner V5\n\n"
 
