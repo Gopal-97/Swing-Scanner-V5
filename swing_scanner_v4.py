@@ -46,7 +46,7 @@ def scan_coin_v4(symbol, interval="1d", limit=300):
             "RR": trade["RR"]
         }
 
-    except Exception:
+    except Exception as e:
         import traceback
         print(f"\nERROR in {symbol}")
         traceback.print_exc()
