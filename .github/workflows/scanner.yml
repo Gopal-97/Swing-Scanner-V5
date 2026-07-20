@@ -34,6 +34,9 @@ jobs:
           echo "telegram_v5.py:"
           cat telegram_v5.py
           echo ""
+          echo "binance_api.py:"
+          cat binance_api.py
+          echo ""
           echo "swing_main_v5.py:"
           head -20 swing_main_v5.py
 
