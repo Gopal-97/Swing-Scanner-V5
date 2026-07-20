@@ -1,15 +1,14 @@
 import requests
 import pandas as pd
 
-
 BASE_URL = "https://api.binance.com"
-
 
 def get_usdt_pairs():
 
     url = BASE_URL + "/api/v3/exchangeInfo"
 
     data = requests.get(url).json()
+    print(data)
 
     pairs = []
 
@@ -52,11 +51,11 @@ def get_data(symbol, interval="1d", limit=250):
         "ignore"
     ])
 
-    df = df[["time","open","high","low","close","volume"]]
+    df = df[["time", "open", "high", "low", "close", "volume"]]
 
     df["time"] = pd.to_datetime(df["time"], unit="ms")
 
-    for col in ["open","high","low","close","volume"]:
+    for col in ["open", "high", "low", "close", "volume"]:
         df[col] = df[col].astype(float)
 
     return df
