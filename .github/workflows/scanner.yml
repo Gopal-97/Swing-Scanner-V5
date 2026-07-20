@@ -23,6 +23,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Debug Files
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo ""
+          echo "Repository Files:"
+          ls -la
+          echo ""
+          echo "telegram_v5.py:"
+          cat telegram_v5.py
+          echo ""
+          echo "swing_main_v5.py:"
+          head -20 swing_main_v5.py
+
       - name: Run Scanner
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
