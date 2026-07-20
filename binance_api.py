@@ -1,68 +1,65 @@
 import requests
 import pandas as pd
 
-BASE_URL = "https://api.bybit.com"
+BASE_URL = "https://api.kucoin.com"
 
 
 def get_usdt_pairs():
 
-    url = BASE_URL + "/v5/market/instruments-info"
+    url = BASE_URL + "/api/v2/symbols"
 
-    params = {
-        "category": "spot"
-    }
-
-    data = requests.get(url, params=params).json()
+    response = requests.get(url)
+    data = response.json()
 
     pairs = []
 
-    for symbol in data["result"]["list"]:
+    if data["code"] != "200000":
+        raise Exception(data)
 
+    for symbol in data["data"]:
         if (
-            symbol["quoteCoin"] == "USDT"
-            and symbol["status"] == "Trading"
+            symbol["quoteCurrency"] == "USDT"
+            and symbol["enableTrading"]
         ):
-            pairs.append(symbol["symbol"])
+            pairs.append(symbol["symbol"].replace("-", ""))
 
     return pairs
 
 
-def get_data(symbol, interval="D", limit=250):
+def get_data(symbol, interval="1day", limit=250):
 
-    interval_map = {
-        "1d": "D",
-        "1h": "60",
-        "4h": "240"
-    }
+    kc_symbol = symbol[:-4] + "-USDT"
 
-    url = BASE_URL + "/v5/market/kline"
+    url = BASE_URL + "/api/v1/market/candles"
 
     params = {
-        "category": "spot",
-        "symbol": symbol,
-        "interval": interval_map.get(interval, "D"),
-        "limit": limit
+        "symbol": kc_symbol,
+        "type": interval
     }
 
-    data = requests.get(url, params=params).json()
+    response = requests.get(url, params=params)
+    data = response.json()
 
-    candles = data["result"]["list"]
+    if data["code"] != "200000":
+        return None
+
+    candles = data["data"][:limit]
 
     candles.reverse()
 
     df = pd.DataFrame(candles, columns=[
         "time",
         "open",
+        "close",
         "high",
         "low",
-        "close",
         "volume",
         "turnover"
     ])
 
     df = df[["time", "open", "high", "low", "close", "volume"]]
 
-    df["time"] = pd.to_datetime(df["time"].astype(int), unit="ms")
+    df["time"] = pd.to_datetime(df["time"].astype(int), unit="s")
 
     for col in ["open", "high", "low", "close", "volume"]:
         df[col] = df[col].astype(float)
