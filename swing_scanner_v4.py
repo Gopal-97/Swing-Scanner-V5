@@ -10,7 +10,11 @@ from support_resistance_v4 import calculate_support_resistance
 
 def scan_coin_v4(symbol, interval="1d", limit=300):
     try:
+
         df = get_data(symbol, interval=interval, limit=limit)
+
+        # DEBUG
+        print(symbol, len(df) if df is not None else "None")
 
         if df is None or len(df) < 200:
             return None
