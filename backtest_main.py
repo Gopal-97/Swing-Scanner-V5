@@ -1,9 +1,9 @@
 import pandas as pd
 
-from binance_api import get_usdt_pairs
-from swing_scanner_v4 import scan_coin_v4
+from binance_api import get_usdt_pairs, get_data
+from backtest_engine import run_backtest
 
-print("========== BACKTEST V1 ==========")
+print("========== BACKTEST V2 ==========")
 
 coins = get_usdt_pairs()
 
@@ -15,24 +15,35 @@ for coin in coins:
 
     print(f"Scanning {coin}...")
 
-    data = scan_coin_v4(
+    df = get_data(
         coin,
         interval="1day",
         limit=500
-    
     )
 
-    if data is not None:
-        results.append(data)
+    if df is None or len(df) < 250:
+        continue
 
-df = pd.DataFrame(results)
+    trades = run_backtest(df)
 
-print("\n========== RESULTS ==========")
+    if not trades.empty:
+        trades["Coin"] = coin
+        results.append(trades)
 
-print(df.head(20).to_string(index=False))
+if len(results):
+    final_df = pd.concat(results, ignore_index=True)
+else:
+    final_df = pd.DataFrame()
 
-print(f"\nTotal Signals : {len(df)}")
+print("\n========== BACKTEST RESULTS ==========")
 
-df.to_csv("backtest_results.csv", index=False)
+if not final_df.empty:
+    print(final_df.head(20).to_string(index=False))
+else:
+    print("No trades found.")
+
+print(f"\nTotal Trades : {len(final_df)}")
+
+final_df.to_csv("backtest_results.csv", index=False)
 
 print("\nSaved : backtest_results.csv")
