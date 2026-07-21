@@ -15,7 +15,7 @@ def scan_coin_v4(symbol, interval="1day", limit=300):
         # DEBUG
         print(symbol, len(df) if df is not None else "None")
 
-        if df is None or len(df) < 200:
+        if df is None or len(df) < 50:
             return None
 
         df = add_swing_indicators_v3(df)
