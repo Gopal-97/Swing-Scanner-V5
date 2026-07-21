@@ -40,29 +40,37 @@ buy_df = buy_df.sort_values(
     ascending=[False, False, False]
 )
 
+# Telegram me sirf Top 10
 buy_df = buy_df.head(10)
 
+# CSV me Top 10 save
 buy_df.to_csv("swing_signals_v5.csv", index=False)
 
 print("\n========== TOP SWING V5 SIGNALS ==========")
-print(buy_df.head(20).to_string(index=False))
+print(buy_df.to_string(index=False))
 
 if len(buy_df) == 0:
     send_telegram_message(
         "📉 Swing Scanner V5\n\nNo BUY signal found today."
     )
 else:
-     msg = "🏆 TOP 10 SWING PICKS\n\n"
+    msg = "🏆 TOP 10 SWING PICKS\n\n"
 
-    for _, row in buy_df.head(10).iterrows():
+    for _, row in buy_df.iterrows():
+
+        emoji = "🟢" if row["Signal"] == "STRONG BUY" else "🟡"
+
         msg += (
             f"📈 {row['Coin']}\n"
-            f"Signal: {row['Signal']}\n"
-            f"Score: {row['Score']}\n"
-            f"Entry: {row['Entry']}\n"
-            f"SL: {row['StopLoss']}\n"
-            f"T1: {row['Target1']}\n"
-            f"T2: {row['Target2']}\n\n"
+            f"{emoji} {row['Signal']}\n"
+            f"⭐ Score : {row['Score']}\n"
+            f"📊 ADX   : {row['ADX']}\n"
+            f"⚖️ RR    : {row['RR']}\n"
+            f"💰 Entry : {row['Entry']}\n"
+            f"🛑 SL    : {row['StopLoss']}\n"
+            f"🎯 Target 1 : {row['Target1']}\n"
+            f"🎯 Target 2 : {row['Target2']}\n"
+            f"━━━━━━━━━━━━\n\n"
         )
 
     send_telegram_message(msg)
