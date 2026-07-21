@@ -11,7 +11,7 @@ def run_backtest(df):
 
     trades = []
 
-    # Indicators ko warm-up dene ke liye
+    # Indicators warm-up
     for i in range(200, len(df) - 1):
 
         last = df.iloc[i]
@@ -26,13 +26,33 @@ def run_backtest(df):
             last["ATR"]
         )
 
+        result = "OPEN"
+
+        for j in range(i + 1, len(df)):
+
+            high = df.iloc[j]["high"]
+            low = df.iloc[j]["low"]
+
+            if low <= trade["StopLoss"]:
+                result = "LOSS"
+                break
+
+            if high >= trade["Target2"]:
+                result = "WIN"
+                break
+
+            if high >= trade["Target1"]:
+                result = "PARTIAL WIN"
+                break
+
         trades.append({
             "Time": str(last["time"]),
             "Signal": signal,
             "Entry": trade["Entry"],
             "StopLoss": trade["StopLoss"],
             "Target1": trade["Target1"],
-            "Target2": trade["Target2"]
+            "Target2": trade["Target2"],
+            "Result": result
         })
 
     return pd.DataFrame(trades)
