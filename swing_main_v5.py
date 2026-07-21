@@ -40,6 +40,8 @@ buy_df = buy_df.sort_values(
     ascending=[False, False, False]
 )
 
+buy_df = buy_df.head(10)
+
 buy_df.to_csv("swing_signals_v5.csv", index=False)
 
 print("\n========== TOP SWING V5 SIGNALS ==========")
