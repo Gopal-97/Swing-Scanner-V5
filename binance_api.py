@@ -1,3 +1,4 @@
+
 import requests
 import pandas as pd
 
@@ -42,9 +43,14 @@ def get_data(symbol, interval="1day", limit=250):
     data = response.json()
 
     if data["code"] != "200000":
+        print("KuCoin API Error:", data)
         return None
 
     candles = data["data"][:limit]
+
+    if not candles:
+        print(f"No candle data for {kc_symbol}")
+        return None
 
     candles.reverse()
 
