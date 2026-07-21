@@ -52,7 +52,7 @@ if len(buy_df) == 0:
         "📉 Swing Scanner V5\n\nNo BUY signal found today."
     )
 else:
-    msg = "🚀 Swing Scanner V5\n\n"
+     msg = "🏆 TOP 10 SWING PICKS\n\n"
 
     for _, row in buy_df.head(10).iterrows():
         msg += (
