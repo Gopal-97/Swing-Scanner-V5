@@ -35,6 +35,8 @@ if df.empty or "Signal" not in df.columns:
 
 buy_df = df[df["Signal"].isin(["BUY", "STRONG BUY"])]
 
+buy_df = buy_df[(buy_df["RR"] > 0) & (buy_df["Entry"] != buy_df["StopLoss"])]
+
 buy_df = buy_df.sort_values(
     by=["Score", "ADX", "RR"],
     ascending=[False, False, False]
