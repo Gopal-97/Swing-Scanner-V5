@@ -1,9 +1,9 @@
 import pandas as pd
 
 from binance_api import get_usdt_pairs, get_data
-from backtest_engine import run_backtest
+from backtest_engine_v3 import run_backtest_v3
 
-print("========== BACKTEST V2 ==========")
+print("========== BACKTEST V3 ==========")
 
 coins = get_usdt_pairs()
 
@@ -24,7 +24,7 @@ for coin in coins:
     if df is None or len(df) < 250:
         continue
 
-    trades = run_backtest(df)
+    trades = run_backtest_v3(df)
 
     if not trades.empty:
         trades["Coin"] = coin
@@ -35,14 +35,26 @@ if len(results):
 else:
     final_df = pd.DataFrame()
 
-print("\n========== BACKTEST RESULTS ==========")
+print("\n========== BACKTEST REPORT ==========")
 
-if not final_df.empty:
-    print(final_df.head(20).to_string(index=False))
-else:
+if final_df.empty:
     print("No trades found.")
+else:
 
-print(f"\nTotal Trades : {len(final_df)}")
+    total = len(final_df)
+    wins = len(final_df[final_df["Result"] == "WIN"])
+    partial = len(final_df[final_df["Result"] == "PARTIAL WIN"])
+    losses = len(final_df[final_df["Result"] == "LOSS"])
+    open_trades = len(final_df[final_df["Result"] == "OPEN"])
+
+    print(f"Total Trades : {total}")
+    print(f"Wins         : {wins}")
+    print(f"Partial Wins : {partial}")
+    print(f"Losses       : {losses}")
+    print(f"Open Trades  : {open_trades}")
+
+    print("\n========== TOP TRADES ==========")
+    print(final_df.head(20).to_string(index=False))
 
 final_df.to_csv("backtest_results.csv", index=False)
 
