@@ -18,6 +18,31 @@ def run_backtest(df):
 
         signal = swing_signal_v3(last)
 
+        # ===== DEBUG START =====
+        score = 0
+
+        if last["EMA20"] > last["EMA50"] > last["EMA200"]:
+            score += 1
+
+        if 50 <= last["RSI"] <= 70:
+            score += 1
+
+        if last["MACD"] > last["MACD_SIGNAL"]:
+            score += 1
+
+        if last["ADX"] >= 25:
+            score += 1
+
+        if last["volume"] > last["VOL20"]:
+            score += 1
+
+        print(
+            last["time"],
+            "Score:", score,
+            "Signal:", signal
+        )
+        # ===== DEBUG END =====
+
         if signal not in ["BUY", "STRONG BUY"]:
             continue
 
