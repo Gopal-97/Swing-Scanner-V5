@@ -17,7 +17,7 @@ for coin in coins:
 
     df = get_data(
         coin,
-        interval="1w",
+        interval="1day",
         limit=500
     )
 
